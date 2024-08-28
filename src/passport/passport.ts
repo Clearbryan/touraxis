@@ -2,7 +2,9 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import passport from 'passport';
 import User from '../models/User'
 
-export const Passport = () => {
+const APP_SECRET = process.env.APP_SECRET || 'touraxis'
+
+export const Passport = (): void => {
 
     const opts = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

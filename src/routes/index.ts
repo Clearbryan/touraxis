@@ -1,19 +1,12 @@
-import { Request, Response, NextFunction, Router } from 'express';
+import e, { Request, Response, Router } from 'express';
 import { AuthenticatedRequest, IUser, MongoDBError } from '../types/types';
+import { projections } from '../database/db';
 import utils from '../utils';
 import User from '../models/User';
 import constants from '../constants';
 import passport from 'passport';
 import Task from '../models/Task';
 
-let errorMessage: string | null = null;
-
-const userProjection = {
-    username: 1, first_name: 1, last_name: 1
-}
-const taskProjectin = {
-    name: 1, description: 1, status: 1, user_id: 1, next_execute_date_time: 1, date_time: 1
-}
 
 export default class RouteController {
     public router: Router;
@@ -37,13 +30,6 @@ export default class RouteController {
 
     }
 
-    /**
-     * User routes
-     * @param req 
-     * @param res 
-     * @returns 
-     */
-
     private async createUser(req: AuthenticatedRequest, res: Response): Promise<Response<IUser>> {
         try {
             const { value, error } = utils.validateUserDetails(req.body)
@@ -57,26 +43,20 @@ export default class RouteController {
             }
 
         } catch (error) {
-            // Check if the error is a MongoDB error
-            if ((error as MongoDBError).code === 11000) {
-                const errorDetails = Object.entries((error as MongoDBError).keyValue).map(
-                    ([key, value]) => { return { key, value }; }
-                );
-                errorMessage = `${errorDetails[0].value} already exists!`;
-            }
-            // Handle other types of errors
-            return res.json({
-                success: false,
-                message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
-            });
+            const result = handleMongoDBError(error);
+            return res.json(result);
         }
     }
 
-    async updateUser(req: Request, res: Response) {
+    async updateUser(req: AuthenticatedRequest, res: Response) {
         const { user_id } = req.params
         const isValidId = utils.isValidMongoId(user_id)
-        if (!isValidId) return res.json({ success: false, message: `Invalid user Id` })
-        try {
+        const idMatch = utils.compreIds(user_id, req.user?._id)
+        if (!isValidId) {
+            return res.json({ success: false, message: `Invalid user Id` })
+        } else if (!idMatch) {
+            return res.json({ success: false, message: `Not authorized to perfom user update!` })
+        } else try {
             const updated = await User.findByIdAndUpdate(user_id, req.body)
             if (updated) {
                 return res.json({
@@ -90,38 +70,37 @@ export default class RouteController {
                 })
             }
         } catch (error) {
-            return res.json({
-                success: false,
-                message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
-            });
+            return res.json(createErrorResponse(error, `Unknown error occurred`));
         }
     }
 
-    private async listUser(req: Request, res: Response): Promise<Record<string, any>> {
+    private async listUser(req: AuthenticatedRequest, res: Response): Promise<Record<string, any>> {
         let data
         const { user_id } = req.params
         try {
             if (user_id) {
                 const isValidId = utils.isValidMongoId(user_id)
                 if (!isValidId) return res.json({ success: false, message: `Invalid user Id` })
-                else data = await User.findById(user_id, userProjection)
+                else data = await User.findById(user_id, projections.user)
             } else {
-                data = await User.find().select(userProjection)
+                data = await User.find().select(projections.user)
             }
             return res.json({ success: true, data })
         } catch (error) {
-            return res.json({
-                success: false,
-                message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
-            });
+            return res.json(createErrorResponse(error, `Unknown error occurred`));
         }
     }
 
-    private async deleteUser(req: Request, res: Response): Promise<Record<string, any>> {
-        const { user_id, task_id } = req.params
+    private async deleteUser(req: AuthenticatedRequest, res: Response): Promise<Record<string, any>> {
+        const { user_id } = req.params
         const isValidId = utils.isValidMongoId(user_id)
-        if (!isValidId) return res.json({ success: false, message: `Invalid user Id` })
-        try {
+        const idMatch = utils.compreIds(user_id, req.user?._id)
+        if (!isValidId) {
+            return res.json({ success: false, message: `Invalid user Id` })
+        } else if (!idMatch) {
+            return res.json({ success: false, message: `Not authorized to delete user` })
+        }
+        else try {
             const deleted = await User.findByIdAndDelete(user_id)
             if (deleted) {
                 return res.json({
@@ -135,25 +114,20 @@ export default class RouteController {
                 })
             }
         } catch (error) {
-            return res.json({
-                success: false,
-                message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
-            });
+            return res.json(createErrorResponse(error, `Unknown error occurred`));
         }
     }
-
-    /**
-     * Tast routes
-     * @param req 
-     * @param res 
-     * @returns 
-     */
 
     private async createTask(req: AuthenticatedRequest, res: Response): Promise<Response<IUser>> {
         const { user_id } = req.params
         try {
             const isValidId = utils.isValidMongoId(user_id)
-            if (!isValidId) return res.json({ success: false, message: `Invalid user Id` })
+            const idMatch = utils.compreIds(user_id, req.user?._id)
+            if (!isValidId) {
+                return res.json({ success: false, message: `Invalid user Id` })
+            } else if (!idMatch) {
+                return res.json({ success: false, message: `Not authorized to create task` })
+            }
             else {
                 const { value, error } = utils.validateTaskDetails(req.body)
                 if (error) {
@@ -165,77 +139,70 @@ export default class RouteController {
                 }
             }
         } catch (error) {
-            // Check if the error is a MongoDB error
-            if ((error as MongoDBError).code === 11000) {
-                const errorDetails = Object.entries((error as MongoDBError).keyValue).map(
-                    ([key, value]) => { return { key, value }; }
-                );
-                errorMessage = `${errorDetails[0].value} already exists!`;
-            }
-            // Handle other types of errors
-            return res.json({
-                success: false,
-                message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
-            });
+            const result = handleMongoDBError(error);
+            return res.json(result);
         }
     }
 
     private async updateTask(req: AuthenticatedRequest, res: Response): Promise<Response<IUser>> {
-        const { task_id } = req.params
+        const { task_id, user_id } = req.params
         const isValidId = utils.isValidMongoId(task_id)
-        if (!isValidId) return res.json({ success: false, message: `Invalid task Id` })
+        const idMatch = utils.compreIds(user_id, req.user?._id)
+        if (!isValidId) {
+            return res.json({ success: false, message: `Invalid task Id` })
+        } else if (!idMatch) {
+            return res.json({ success: false, message: `Not authorized to update task` })
+        }
         else {
             try {
                 const updated = await Task.findByIdAndUpdate(task_id, req.body)
                 if (updated) {
                     return res.json({
                         success: true,
-                        message: `Taks updated successfully`
+                        message: `Task updated successfully`
                     })
                 } else {
                     return res.json({
                         success: false,
-                        message: `Taks update failure!`
+                        message: `Task update failure!`
                     })
                 }
             } catch (error) {
-                return res.json({
-                    success: false,
-                    message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
-                });
+                return res.json(createErrorResponse(error, `Unknown error occurred`));
             }
         }
 
     }
 
-    private async listTask(req: Request, res: Response): Promise<Record<string, any>> {
+    private async listTask(req: AuthenticatedRequest, res: Response): Promise<Record<string, any>> {
         let data
         const { user_id, task_id } = req.params
-
         const isValidId = utils.isValidMongoId(user_id)
         if (!isValidId) return res.json({ success: false, message: `Invalid user Id` })
         try {
             if (!task_id) {
-                data = await Task.find({ user_id }, taskProjectin)
+                data = await Task.find({ user_id }, projections.task)
             } else {
                 const isValidId = utils.isValidMongoId(task_id)
                 if (!isValidId) return res.json({ success: false, message: `Invalid task Id` })
-                data = await Task.findById(task_id).select(taskProjectin)
+                data = await Task.findById(task_id).select(projections.task)
             }
             return res.json({ success: true, data })
         } catch (error) {
-            return res.json({
-                success: false,
-                message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
-            });
+            return res.json(createErrorResponse(error, `Unknown error occurred`));
         }
     }
 
-    private async deleteTask(req: Request, res: Response): Promise<Record<string, any>> {
-        const { user_id, task_id } = req.params
+    private async deleteTask(req: AuthenticatedRequest, res: Response): Promise<Record<string, any>> {
+        const { task_id, user_id } = req.params
         const isValidId = utils.isValidMongoId(task_id)
-        if (!isValidId) return res.json({ success: false, message: `Invalid task Id` })
-        try {
+        const idMatch = utils.compreIds(user_id, req.user?._id)
+        if (!isValidId) {
+            return res.json({ success: false, message: `Invalid task Id` })
+        } else if (!idMatch) {
+            return res.json({ success: false, message: `Unauthorized to delete task` })
+        }
+        else try {
             const deleted = await Task.findByIdAndDelete(task_id)
             if (deleted) {
                 return res.json({
@@ -249,10 +216,7 @@ export default class RouteController {
                 })
             }
         } catch (error) {
-            return res.json({
-                success: false,
-                message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
-            });
+            return res.json(createErrorResponse(error, `Unknown error occurred`));
         }
     }
 
@@ -268,14 +232,14 @@ export default class RouteController {
             }
 
             const passwordsMatch = await utils.comparePassword(password, user.password);
+
             if (!passwordsMatch) {
                 return res.status(constants.BAD_REQUEST_CODE).json({
                     success: false,
                     message: `Incorrect password`,
                 });
             }
-            const strippedUser = utils.stripUser(user)
-            const token = await utils.generateToken(strippedUser);
+            const token = await utils.generateToken(user);
             if (!token) {
                 return res.status(constants.INTERNAL_SERVER_CODE).json({
                     success: false,
@@ -289,14 +253,35 @@ export default class RouteController {
 
         }
         catch (error) {
-            return res.json({
-                success: false,
-                message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
-            });
+            return res.json(createErrorResponse(error, `Unknown error occurred`));
         }
     }
 }
 
 export const routeController = new RouteController().router;
 
+// handle mongo error
+function handleMongoDBError(error: unknown): { success: boolean; message: string } {
+    let errorMessage: string = '';
 
+    // Check if the error is a MongoDB error
+    if ((error as MongoDBError).code === 11000) {
+        const errorDetails = Object.entries((error as MongoDBError).keyValue).map(
+            ([key, value]) => { return { key, value }; }
+        );
+        errorMessage = `${errorDetails[0].value} already exists!`;
+    }
+    // Handle other types of errors
+    return {
+        success: false,
+        message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
+    };
+}
+
+// utility function for generic error response
+function createErrorResponse(error: unknown, errorMessage?: string): { success: boolean; message: string } {
+    return {
+        success: false,
+        message: errorMessage || (error instanceof Error ? error.message : 'Unknown error occurred'),
+    };
+}

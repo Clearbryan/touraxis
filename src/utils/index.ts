@@ -1,17 +1,25 @@
-import Joi from 'joi'
+/**
+ * This file contains various helper functions used across the application
+ */
+
+import Joi, { ValidationResult } from 'joi'
 import { ObjectId } from 'mongodb';
-import { IUser } from '../types/types';
+import { ITask, IUser } from '../types/types';
 import Jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import constants from '../constants';
+
+const APP_SECRET = process.env.APP_SECRET || 'touraxis'
 class Utils {
 
-    public validateUserDetails(user: IUser) {
+    // Validate user details input
+    public validateUserDetails(user: IUser): ValidationResult<IUser> {
         const schema = Joi.object({
             username: Joi.string().min(3).max(30).required().error(new Error(`Username is required!`)),
             first_name: Joi.string().min(3).max(30).required().error(new Error(`First name is required!`)),
             last_name: Joi.string().min(3).max(30).required().error(new Error(`Last name is required!`)),
             password: Joi.string()
-                .pattern(new RegExp(`^[a-zA-Z0-9]{3,30}$`))
+                .pattern(new RegExp(constants.REGEX))
                 .min(8)
                 .max(12)
                 .required()
@@ -20,7 +28,8 @@ class Utils {
         return schema.validate(user)
     }
 
-    public validateTaskDetails(task: Record<string, any>) {
+    // Validate task details input
+    public validateTaskDetails(task: Record<string, any>): ValidationResult<ITask> {
         const schema = Joi.object({
             name: Joi.string().min(3).max(100).required().error(new Error(`Task name is required!`)),
             description: Joi.string().min(3).max(500).required().error(new Error(`Invalid task description`)),
@@ -30,33 +39,22 @@ class Utils {
         return schema.validate(task)
     }
 
+    // check if a given Id is valid in mongo
+    public isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 
-    public isValidMongoId(id: string): boolean {
-        return ObjectId.isValid(id);
-    }
-
-    public hashPassword(password: string) {
-        return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-    }
+    // encrypt user password
+    public hashPassword = (password: string): string => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
     // compare hash
-    public async comparePassword(password: string, hash: string) {
+    public comparePassword = async (password: string, hash: string): Promise<boolean> => {
         return await bcrypt.compare(password, hash);
-    }
+    };
 
     // generate token
-    public async generateToken(data: any) {
-        return Jwt.sign({ data }, APP_SECRET, { expiresIn: `1h` });
-    }
+    public generateToken = async (data: any): Promise<string> => Jwt.sign({ data }, APP_SECRET, { expiresIn: `1h` })
 
-    stripUser(user: any) {
-        const { password, __v, ...rest } = user._doc;
-        return rest
-    }
-
-    compreIds(id1: ObjectId | string, id2: ObjectId | string) {
-        return new ObjectId(id1).equals(new ObjectId(id2))
-    }
+    // compare Ids
+    compreIds = (id1: ObjectId | string, id2: ObjectId | string): boolean => new ObjectId(id1).equals(new ObjectId(id2))
 }
 
 export default new Utils()
