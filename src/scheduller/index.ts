@@ -3,6 +3,7 @@ import Task from '../models/Task';
 import constants from '../constants'
 import { connect, projections } from '../database/db'
 import { ITask } from '../types/types';
+
 // Connect app to database
 connect()
 
@@ -25,12 +26,11 @@ export function jobScheduller(name: string, interval: any, timezone: string) {
                 console.log(`Found and updated ${pendingTasks.length} tasks.`)
             } catch (error) {
                 console.log(`Error updating pending taks: `, { error });
-
             }
-        }
+        } else console.log(`Found ${pendingTasks.length} tasks in pending.`)
     }, null, true, timezone)
 }
 
-jobScheduller('Process Pending Task', [0, '*/30', '*', '*', '*', '*'], 'Africa/Johannesburg')
+jobScheduller('Process Pending Tasks', [0, '*/30', '*', '*', '*', '*'], 'Africa/Johannesburg')
 
 

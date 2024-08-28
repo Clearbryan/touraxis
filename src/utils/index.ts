@@ -14,6 +14,7 @@ class Utils {
 
     // Validate user details input
     public validateUserDetails(user: IUser): ValidationResult<IUser> {
+
         const schema = Joi.object({
             username: Joi.string().min(3).max(30).required().error(new Error(`Username is required!`)),
             first_name: Joi.string().min(3).max(30).required().error(new Error(`First name is required!`)),
