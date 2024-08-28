@@ -1,4 +1,4 @@
-import e, { Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { AuthenticatedRequest, IUser, MongoDBError } from '../types/types';
 import { projections } from '../database/db';
 import utils from '../utils';
