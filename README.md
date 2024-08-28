@@ -7,7 +7,7 @@ This API uses:
 - [TypeScript](https://www.typescriptlang.org/)
 
 ### Getting Started
-To use the API, clone the repo: [https://github.com/Clearbryan/touraxis](https://github.com/Clearbryan/touraxis). Once cloned, in the `root` folder, install the packages using `npm install`.
+To use the API, clone the repo: [https://github.com/Clearbryan/touraxis](https://github.com/Clearbryan/touraxis). Once cloned, in the navigate to the `root` folder ```cd touraxis``` and install the packages using `npm install`.
 
 ### Environment Variables
 There are a few environment variables required to run the API. In the `root` folder, create a `.env` file. Copy and paste the following environment variables:
