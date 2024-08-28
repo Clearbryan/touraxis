@@ -249,6 +249,9 @@ export default class RouteController {
             return res.json({
                 success: true,
                 token,
+                user_name: user.username,
+                user_id: user._id
+
             });
 
         }
