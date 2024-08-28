@@ -12,7 +12,7 @@ export function runSchedulledTask(filePath: string) {
     });
 
     task.on('close', (code) => {
-        console.log(`child process exited with code ${code}`);
+        console.log(`Shedulled task process exited with ${code}`);
     });
 }
 
