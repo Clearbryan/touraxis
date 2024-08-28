@@ -25,7 +25,7 @@ export function jobScheduller(name: string, interval: any, timezone: string) {
                 }, { status: 'Done' })
                 console.log(`Found and updated ${pendingTasks.length} tasks.`)
             } catch (error) {
-                console.log(`Error updating pending taks: `, { error });
+                console.log(`Error updating pending tasks: `, { error });
             }
         } else console.log(`Found ${pendingTasks.length} tasks in pending.`)
     }, null, true, timezone)
