@@ -32,7 +32,7 @@ You may use any REST client to test the API, however for the purposes of this do
 ### API Endpoints
 Some API endpoints are protected and the user needs to be logged in to access them. The API has the following endpoints:
 
-1. http://localhost:\`{PORT}\`/api/users/ - Accepts a ```POST``` request the create a new user. A user needs to have the following: 
+1. http://localhost:````PORT```/api/users/ - Accepts a ```POST``` request the create a new user. A user needs to have the following: 
 ```json
 {
     "username": "yourusername",
@@ -41,7 +41,7 @@ Some API endpoints are protected and the user needs to be logged in to access th
     "password": "your password"
 }
 ``` 
-2. http://localhost:\`{PORT}\`/api/users/login - Accepts a ```POST``` request for user login. A login request needs to have the following: 
+2. http://localhost:```PORT```/api/users/login - Accepts a ```POST``` request for user login. A login request needs to have the following: 
 ```json
 {
     "username": "yourusernae",
@@ -62,9 +62,9 @@ Please note the token expires after 60 minutes and you'll need to login again to
 For every request to a protected endpoint, this token needs to be included it the request headers Authorozation: 
 ![title](Images/postman.jpg)
 
-3. http://localhost:\`{PORT}\`/api/users - Accepts a ```GET``` request to list all users
+3. http://localhost:```PORT```/api/users - Accepts a ```GET``` request to list all users
 
-4. `http://localhost:\`{PORT}\`/api/users/\`{user_id}\`` - Accepts: 
+4. http://localhost:```PORT```/api/users/```user_id``` - Accepts: 
     1. ```GET``` request to list  a specific user
     2. ```PUT``` request to update a user. User body exapmple:
    ```json
@@ -75,7 +75,7 @@ For every request to a protected endpoint, this token needs to be included it th
    ```
     3. ```DELETE``` request to delete a user.
 
-5. http://localhost:\`{PORT}\`/api/users/\`{user_id}\`/tasks - Accepts:
+5. http://localhost:```PORT```/api/users/```user_id```/tasks - Accepts:
    1. ```POST``` request to create a task. Task body exapmple:
    ```json
     {
@@ -86,7 +86,7 @@ For every request to a protected endpoint, this token needs to be included it th
    ```
    2. ```GET``` request to list all user tasks
 
-6. http://localhost:\`{PORT}\`/api/users/\`{user_id}\`/tasks/\`{task_id}\` - Accepts: 
+6. http://localhost:```PORT```/api/users/```user_id```/tasks/```task_id``` - Accepts: 
     1. ```GET``` request to list  a specific task
     2. ```PUT``` request to update a task. Task body exapmple:
    ```json
