@@ -32,7 +32,7 @@ You may use any REST client to test the API, however for the purposes of this do
 ### API Endpoints
 Some API endpoints are protected and the user needs to be logged in to access them. The API has the following endpoints:
 
-1. http://localhost:```{PORT}```/api/users/ - Accepts a ```POST`` request the create a new user. A user needs to have the following: 
+1. http://localhost:```markdown {PORT}```/api/users/ - Accepts a ```POST`` request the create a new user. A user needs to have the following: 
 ```json
 {
     "username": "yourusername",
