@@ -66,6 +66,8 @@ Some API endpoints are protected, and the user needs to be logged in to access t
 
    For every request to a protected endpoint, this token needs to be included in the request headers as `Authorization: Bearer <token>`.
 
+   ![title](Images/postman.jpg)
+
 3. `http://localhost:{PORT}/api/users` - Accepts a `GET` request to list all users.
 
 4. `http://localhost:{PORT}/api/users/{user_id}` - Accepts:
