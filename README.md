@@ -32,12 +32,12 @@ When this command is run, two things happen:
 2. It spawns a new process that runs a task every 30 minutes and logs the outcome of the task activity to the console.
 
 ### Usage
-You may use any REST client to test the API. However, for the purposes of this documentation, we will use [Postman](https://www.postman.com/). Please note Postman Chrome Extension DOES NOT allow requests over HTTP connections. For this reason we need to use the Postman Desktop Client
+You may use any REST client to test the API. However, for the purposes of this documentation, we will use [Postman](https://www.postman.com/). Please note Postman Chrome Extension DOES NOT allow requests over HTTP connections but rather HTTPS. For this reason we need to use the Postman Desktop Client
 
 ### API Endpoints
-Some API endpoints are protected, and the user needs to be logged in to access them. The API has the following endpoints:
+Some API endpoints are protected and the user needs to be logged in to access them. The API has the following endpoints:
 
-1. `http://localhost:{PORT}/api/users/` - Accepts a `POST` request to create a new user. A user needs to have the following:
+1. `http://localhost:{PORT}/api/users/` - Accepts a `POST` request to create a new user. Example request:
    ```json
    {
        "username": "yourusername",
@@ -46,7 +46,7 @@ Some API endpoints are protected, and the user needs to be logged in to access t
        "password": "your password"
    }
    ``` 
-2. `http://localhost:{PORT}/api/users/login` - Accepts a `POST` request for user login. A login request needs to have the following:
+2. `http://localhost:{PORT}/api/users/login` - Accepts a `POST` request for user login. Example request:
    ```json
    {
        "username": "yourusername",
@@ -62,9 +62,9 @@ Some API endpoints are protected, and the user needs to be logged in to access t
        "user_id": "66cf3f8b6fe4cb477a52fd83"
    }
    ```
-   Please note that the token expires after 60 minutes, and you'll need to log in again to get a new token if the token has expired.
+   Please note that the token expires after 60 minutes and you'll need to log in again to get a new token if the token has expired.
 
-   For every request to a protected endpoint, this token needs to be included in the request headers as `Authorization: Bearer <token>`.
+   For every request to a protected endpoint, this token needs to be included in the request headers as `Authorization: Bearer <token>`. See screenshot below:
 
    ![title](Images/postman.jpg)
 
@@ -72,7 +72,7 @@ Some API endpoints are protected, and the user needs to be logged in to access t
 
 4. `http://localhost:{PORT}/api/users/{user_id}` - Accepts:
    - `GET` request to retrieve a specific user.
-   - `PUT` request to update a user. Example user body:
+   - `PUT` request to update a user. Example request:
    ```json
    {
        "first_name": "John",
@@ -82,7 +82,7 @@ Some API endpoints are protected, and the user needs to be logged in to access t
    - `DELETE` request to delete a user.
 
 5. `http://localhost:{PORT}/api/users/{user_id}/tasks` - Accepts:
-   - `POST` request to create a task. Example task body:
+   - `POST` request to create a task. Example request:
    ```json
    {
        "name": "Review Code for Security Vulnerabilities",
@@ -95,7 +95,7 @@ Some API endpoints are protected, and the user needs to be logged in to access t
 
 6. `http://localhost:{PORT}/api/users/{user_id}/tasks/{task_id}` - Accepts:
    - `GET` request to retrieve a specific task.
-   - `PUT` request to update a task. Example task body:
+   - `PUT` request to update a task. Example request:
    ```json
    {
        "name": "Review Code for Security Vulnerabilities",
