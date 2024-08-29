@@ -64,7 +64,7 @@ Some API endpoints are protected and the user needs to be logged in to access th
    ```
    Please note that the token expires after 60 minutes and you'll need to log in again to get a new token if the token has expired.
 
-   For every request to a protected endpoint, this token needs to be included in the request headers as `Authorization: Bearer <token>`.
+   For every request to a protected endpoint, this token needs to be included in the request headers as `Authorization: Bearer <token>`. See screenshot below:
 
    ![title](Images/postman.jpg)
 
