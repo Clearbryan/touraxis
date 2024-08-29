@@ -32,7 +32,7 @@ When this command is run, two things happen:
 2. It spawns a new process that runs a task every 30 minutes and logs the outcome of the task activity to the console.
 
 ### Usage
-You may use any REST client to test the API. However, for the purposes of this documentation, we will use [Postman](https://www.postman.com/).
+You may use any REST client to test the API. However, for the purposes of this documentation, we will use [Postman](https://www.postman.com/). Please note Postman Chrome Extension DOES NOT allow requests over HTTP connections, for this reason we need to use the Postman Desktop Client
 
 ### API Endpoints
 Some API endpoints are protected, and the user needs to be logged in to access them. The API has the following endpoints:
