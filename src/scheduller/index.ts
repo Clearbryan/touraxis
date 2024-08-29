@@ -16,13 +16,13 @@ export function jobScheduller(name: string, interval: any, timezone: string) {
         const pendingTasks: ITask[] = await Task.find(query, projections.task)
         console.log(`Running shedulled task: ${name}`, { pendingTasks });
         if (pendingTasks && pendingTasks.length) {
-            const taskIds = pendingTasks.filter(task => task._id)
+            const taskIds: ITask[] = pendingTasks.filter(task => task._id)
             try {
                 await Task.updateMany({
                     _id: {
                         $in: taskIds
                     }
-                }, { status: 'Done' })
+                }, { status: constants.TASK_STATUSES.Done })
                 console.log(`Found and updated ${pendingTasks.length} task(s).`)
             } catch (error) {
                 console.log(`Error updating pending task(s): `, { error });
