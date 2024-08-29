@@ -23,11 +23,11 @@ export function jobScheduller(name: string, interval: any, timezone: string) {
                         $in: taskIds
                     }
                 }, { status: 'Done' })
-                console.log(`Found and updated ${pendingTasks.length} tasks.`)
+                console.log(`Found and updated ${pendingTasks.length} task(s).`)
             } catch (error) {
-                console.log(`Error updating pending tasks: `, { error });
+                console.log(`Error updating pending task(s): `, { error });
             }
-        } else console.log(`Found ${pendingTasks.length} tasks in pending.`)
+        } else console.log(`Found ${pendingTasks.length} task(s) in pending.`)
     }, null, true, timezone)
 }
 
