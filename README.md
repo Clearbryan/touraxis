@@ -62,7 +62,7 @@ Some API endpoints are protected and the user needs to be logged in to access th
        "user_id": "66cf3f8b6fe4cb477a52fd83"
    }
    ```
-   Please note that the token expires after 60 minutes, and you'll need to log in again to get a new token if the token has expired.
+   Please note that the token expires after 60 minutes and you'll need to log in again to get a new token if the token has expired.
 
    For every request to a protected endpoint, this token needs to be included in the request headers as `Authorization: Bearer <token>`.
 
