@@ -14,7 +14,7 @@ There are a few environment variables required to run the API. In the root folde
 
 ```
 APP_SECRET=touraxis
-PORT=3002
+PORT=3000
 DB_PASS=riYsahtAbMY0b51V
 DB_USER=chetekwebrian
 DB_NAME=touraxis
