@@ -35,7 +35,7 @@ When this command is run, two things happen:
 You may use any REST client to test the API. However, for the purposes of this documentation, we will use [Postman](https://www.postman.com/). Please note Postman Chrome Extension DOES NOT allow requests over HTTP connections but rather HTTPS. For this reason we need to use the Postman Desktop Client
 
 ### API Endpoints
-Some API endpoints are protected, and the user needs to be logged in to access them. The API has the following endpoints:
+Some API endpoints are protected and the user needs to be logged in to access them. The API has the following endpoints:
 
 1. `http://localhost:{PORT}/api/users/` - Accepts a `POST` request to create a new user. A user needs to have the following:
    ```json
