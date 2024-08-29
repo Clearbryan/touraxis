@@ -1,6 +1,6 @@
 export default {
     TASK_STATUSES: {
-        TODO: 'To Do',
+        TODO: 'Todo',
         PENDING: 'Pending',
         Done: 'Done'
 

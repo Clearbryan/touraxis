@@ -7,7 +7,6 @@ const DB_NAME = process.env.DB_NAME as string
 export async function connect(): Promise<void> {
     try {
         await mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASS}@touraxis.p4pjv.mongodb.net/${DB_NAME}?retryWrites=true&w=majority&appName=TourAxis`)
-        console.log(`Connected to database`);
     } catch (error) {
         console.log(`Error connecting to database... `, error);
         process.exit(1)

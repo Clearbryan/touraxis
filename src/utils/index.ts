@@ -34,7 +34,7 @@ class Utils {
         const schema = Joi.object({
             name: Joi.string().min(3).max(100).required().error(new Error(`Task name is required!`)),
             description: Joi.string().min(3).max(500).required().error(new Error(`Invalid task description`)),
-            status: Joi.string().valid('To Do', 'Pending', 'Done').error(new Error(`Invalid status type!`)),
+            status: Joi.string().valid('Todo', 'Pending', 'Done').error(new Error(`Invalid status type!`)),
             next_execute_date_time: new Date(Date.now() + 12 * 60 * 60 * 1000) // 12 hours from creation
         })
         return schema.validate(task)

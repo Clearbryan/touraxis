@@ -90,6 +90,7 @@ Some API endpoints are protected, and the user needs to be logged in to access t
        "status": "Pending"
    }
    ```
+   By default a task is created with a ```next_execute_date_time``` set to 24 hrs from the time the task was created. Every 30 minutes, the API runs a shedulled task to check for tasks in a Pending state and if found, check if the ```next_execute_date_time``` has passed and update the tasks to Done.
    - `GET` request to list all tasks for a specific user.
 
 6. `http://localhost:{PORT}/api/users/{user_id}/tasks/{task_id}` - Accepts:
@@ -103,3 +104,4 @@ Some API endpoints are protected, and the user needs to be logged in to access t
    }
    ```
    - `DELETE` request to delete a task.
+
