@@ -1,8 +1,8 @@
 import mongoose from "mongoose"
 
-const DB_USER = process.env.DB_USER as string
-const DB_PASS = process.env.DB_PASS as string
-const DB_NAME = process.env.DB_NAME as string
+const DB_USER: string = process.env.DB_USER as string
+const DB_PASS: string = process.env.DB_PASS as string
+const DB_NAME: string = process.env.DB_NAME as string
 
 export async function connect(): Promise<void> {
     try {

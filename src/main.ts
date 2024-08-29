@@ -9,8 +9,8 @@ import { Passport } from './passport/passport';
 import path from 'path';
 import { runSchedulledTask } from './scheduller/task-scheduller';
 
-const PORT = process.env.PORT || 3001
-const APP_SECRET = process.env.APP_SECRET || 'touraxis'
+const PORT = process.env.PORT || 3000
+export const APP_SECRET: string = process.env.APP_SECRET || 'touraxis'
 const filePath = path.join(__dirname + '/scheduller/index')
 
 const app: Application = express()

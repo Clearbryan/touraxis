@@ -7,7 +7,7 @@ import { ITask } from '../types/types';
 // Connect app to database
 connect()
 
-export function jobScheduller(name: string, interval: any, timezone: string) {
+export function jobScheduller(name: string, interval: any, timezone: string): void {
     const query: Record<string, any> = {
         status: constants.TASK_STATUSES.PENDING,
         next_execute_date_time: { $lt: new Date().toISOString() }

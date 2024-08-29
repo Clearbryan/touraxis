@@ -1,20 +1,19 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import passport from 'passport';
 import User from '../models/User'
-
-const APP_SECRET = process.env.APP_SECRET || 'touraxis'
+import { IUser } from '../types/types';
+import { APP_SECRET } from '../main';
 
 export const Passport = (): void => {
-
     const opts = {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         secretOrKey: APP_SECRET,
     };
 
     passport.use(
-        new Strategy(opts, async (jwtPayload, done: (error: any, user?: any) => void) => {
+        new Strategy(opts, async (jwtPayload: { data: { _id: any; }; }, done: (error: any, user?: IUser | boolean) => void) => {
             try {
-                const user: Record<string, any> | null = await User.findById(jwtPayload.data._id);
+                const user: IUser | null = await User.findById(jwtPayload.data._id);
 
                 if (!user) {
                     return done(null, false);

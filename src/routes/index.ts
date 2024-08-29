@@ -43,8 +43,6 @@ export default class RouteController {
             }
 
         } catch (error) {
-            console.log(error);
-
             const result = handleMongoDBError(error);
             return res.json(result);
         }
