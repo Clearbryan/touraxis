@@ -37,7 +37,7 @@ You may use any REST client to test the API. However, for the purposes of this d
 ### API Endpoints
 Some API endpoints are protected and the user needs to be logged in to access them. The API has the following endpoints:
 
-1. `http://localhost:{PORT}/api/users/` - Accepts a `POST` request to create a new user. A user needs to have the following:
+1. `http://localhost:{PORT}/api/users/` - Accepts a `POST` request to create a new user. Example request:
    ```json
    {
        "username": "yourusername",
@@ -46,7 +46,7 @@ Some API endpoints are protected and the user needs to be logged in to access th
        "password": "your password"
    }
    ``` 
-2. `http://localhost:{PORT}/api/users/login` - Accepts a `POST` request for user login. A login request needs to have the following:
+2. `http://localhost:{PORT}/api/users/login` - Accepts a `POST` request for user login. Example request:
    ```json
    {
        "username": "yourusername",
@@ -72,7 +72,7 @@ Some API endpoints are protected and the user needs to be logged in to access th
 
 4. `http://localhost:{PORT}/api/users/{user_id}` - Accepts:
    - `GET` request to retrieve a specific user.
-   - `PUT` request to update a user. Example user body:
+   - `PUT` request to update a user. Example request:
    ```json
    {
        "first_name": "John",
@@ -82,7 +82,7 @@ Some API endpoints are protected and the user needs to be logged in to access th
    - `DELETE` request to delete a user.
 
 5. `http://localhost:{PORT}/api/users/{user_id}/tasks` - Accepts:
-   - `POST` request to create a task. Example task body:
+   - `POST` request to create a task. Example request:
    ```json
    {
        "name": "Review Code for Security Vulnerabilities",
@@ -95,7 +95,7 @@ Some API endpoints are protected and the user needs to be logged in to access th
 
 6. `http://localhost:{PORT}/api/users/{user_id}/tasks/{task_id}` - Accepts:
    - `GET` request to retrieve a specific task.
-   - `PUT` request to update a task. Example task body:
+   - `PUT` request to update a task. Example request:
    ```json
    {
        "name": "Review Code for Security Vulnerabilities",
